@@ -1,12 +1,12 @@
-let RunSentimentAnalysis = ()=>{
-    textToAnalyze = document.getElementById("textToAnalyze").value;
+async function RunSentimentAnalysis() {
+    const textToAnalyze = document.getElementById("textToAnalyze").value;
+    const output = document.getElementById("system_response");
+    const query = new URLSearchParams({ textToAnalyze });
 
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("system_response").innerHTML = xhttp.responseText;
-        }
-    };
-    xhttp.open("GET", "emotionDetector?textToAnalyze"+"="+textToAnalyze, true);
-    xhttp.send();
+    try {
+        const response = await fetch(`emotionDetector?${query}`);
+        output.textContent = await response.text();
+    } catch {
+        output.textContent = "Unable to reach the application. Please try again.";
+    }
 }
